@@ -1,0 +1,8 @@
+package com.example.firsttomcat.dao;
+
+public interface UserDao {
+    boolean authenticate(String login, String password);
+
+
+
+}
