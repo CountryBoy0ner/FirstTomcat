@@ -9,6 +9,7 @@ public class LogoutCommand implements Command {
 
     @Override
     public String execute(HttpServletRequest request) {
-        return null;//todo
+        request.getSession().invalidate();
+        return "index.jsp";
     }
 }

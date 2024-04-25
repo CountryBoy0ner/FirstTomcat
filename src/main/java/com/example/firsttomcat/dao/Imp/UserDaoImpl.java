@@ -1,32 +1,38 @@
 package com.example.firsttomcat.dao.Imp;
 
+import com.example.firsttomcat.controller.Controller;
 import com.example.firsttomcat.dao.BaseDao;
+import com.example.firsttomcat.dao.Connection.Pool.Neo4jConnectionManager;
+import com.example.firsttomcat.dao.Connection.Neo4jService;
 import com.example.firsttomcat.dao.UserDao;
 import com.example.firsttomcat.entity.User;
-import org.neo4j.driver.AuthTokens;
-import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
+import com.example.firsttomcat.exception.DaoException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.neo4j.driver.exceptions.AuthenticationException;
+import org.neo4j.driver.exceptions.ServiceUnavailableException;
+
 
 import java.util.List;
 
-import static org.neo4j.driver.Values.parameters;
-
 public class UserDaoImpl extends BaseDao<User> implements UserDao, AutoCloseable {
+
+    final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UserDaoImpl.class);
+
     private static final UserDaoImpl INSTANCE = new UserDaoImpl();
+    private final Neo4jConnectionManager connectionManager;
+
+    private UserDaoImpl(){
+        this.connectionManager = new Neo4jConnectionManager(
+                "neo4j+s://2f26ebae.databases.neo4j.io",
+                "neo4j",
+                "ipy6ASS3ezx6UmAsYGYEnJH8rJM5o8CuGZ5-ct4RaL8");
+        this.connectionManager.connect();
+    }
+
     public static UserDaoImpl getInstance() {
         return INSTANCE;
     }
-
-    private final Driver driver;
-
-    public UserDaoImpl() {
-        // Replace with your actual Neo4j database URI, username, and password
-        final String dbUri = "<neo4j://localhost:7687>";
-        final String dbUser = "<neo4j>";
-        final String dbPassword = "<vs6z39VUkbZ0jaYF6WtWtIEPKNpb6nYJ5O1fFcjEEZQ>";
-        this.driver = GraphDatabase.driver(dbUri, AuthTokens.basic(dbUser, dbPassword));
-    }
-
     @Override
     public boolean insert(User user) {
         return false;
@@ -34,7 +40,8 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao, AutoCloseable
 
     @Override
     public boolean delete(User user) {
-        return false;
+        throw new UnsupportedOperationException("delete not supported");
+        //todo
     }
 
     @Override
@@ -48,16 +55,49 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao, AutoCloseable
     }
 
     @Override
-    public boolean authenticate(String login, String password) {
-        try (var session = driver.session()) {
-            var result = session.run("MATCH (u:User {login: $login, password: $password}) RETURN u",
-                    parameters("login", login, "password", password));
-            return result.hasNext();
+
+    public boolean authenticate(String login, String password) throws DaoException {
+
+        try {
+            Neo4jService service = new Neo4jService(connectionManager.getDriver());
+            String passwordFromDb = service.getUsersPasswordByName(login);
+            logger.info("Dao authenticate: password From Db - " + passwordFromDb);
+
+
+             if (passwordFromDb.equals(password)) {
+                logger.info("Dao authenticate: Passed");
+                return true;
+            } else {
+                 logger.info("Dao authenticate: Failed ");
+                 return false;
+             }
+
+        } catch (ServiceUnavailableException e) {
+            logger.error("UserDaoImpl: ServiceUnavailableException: Ошибка при подключении к базе данных", e);
+            throw new DaoException(e.getMessage() + "Ошибка при подключении к базе данных" );
+        } catch (AuthenticationException e) {
+            logger.error("UserDaoImpl: AuthenticationException: Ошибка аутентификации", e);
+            throw new DaoException(e.getMessage() +"Ошибка аутентификации"); //todo
+        } catch (Exception e) {
+            logger.error("UserDaoImpl: НЕТ ТАКОГО ПОЛЬЗОВАТЕЛЯ", e);
+            //throw new DaoException(e + "НЕТ ТАКОГО ПОЛЬЗОВАТЕЛЯ"); //todo
+            return false;
+
         }
+
     }
+
 
     @Override
     public void close() throws Exception {
-        driver.close();
+        try {
+            connectionManager.close();
+        } catch (Exception e) {
+            logger.error("Ошибка при закрытии соединения", e);
+            throw e;
+        }
     }
+
+
+
 }

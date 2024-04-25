@@ -11,12 +11,19 @@
     <title>500</title>
 </head>
 <body>
-<h1>java.lang.Throwable </h1>
+
+    Request from : ${pageContext.errorData.requestURI} is failed <br/>
+    Servlet name: ${pageContext.errorData.servletName}- <br/>
+    Status code: ${pageContext.errorData.statusCode} <br/>
+    Exception: ${pageContext.exception.message} <br/>
+    <br/><br/><br/>
+    Message from exception: ${error_msg}
 
 <ul>
     <li>
         <a href="http://localhost:8081/FirstTomcat_war_exploded/">Go back </a>
     </li>
 </ul>
+
 </body>
 </html>
