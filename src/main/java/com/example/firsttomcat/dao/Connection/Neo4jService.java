@@ -42,8 +42,7 @@ public class Neo4jService {
                 return record.get("u.Password").asString();
 
             } else {
-                //todo logs
-                System.out.println("Пользователь не найден");
+                logger.info("UserDaoImlp:пользователь не найден ");
                 return null;
             }
         }

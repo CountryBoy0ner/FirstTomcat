@@ -77,10 +77,10 @@ public class UserDaoImpl extends BaseDao<User> implements UserDao, AutoCloseable
             throw new DaoException(e.getMessage() + "Ошибка при подключении к базе данных" );
         } catch (AuthenticationException e) {
             logger.error("UserDaoImpl: AuthenticationException: Ошибка аутентификации", e);
-            throw new DaoException(e.getMessage() +"Ошибка аутентификации"); //todo
+            throw new DaoException(e.getMessage() +"Ошибка аутентификации");
         } catch (Exception e) {
             logger.error("UserDaoImpl: НЕТ ТАКОГО ПОЛЬЗОВАТЕЛЯ", e);
-            //throw new DaoException(e + "НЕТ ТАКОГО ПОЛЬЗОВАТЕЛЯ"); //todo
+            //throw new DaoException(e + "НЕТ ТАКОГО ПОЛЬЗОВАТЕЛЯ");
             return false;
 
         }
