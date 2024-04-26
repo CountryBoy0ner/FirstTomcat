@@ -17,7 +17,7 @@ import java.util.List;
 
 public class UserDaoImpl extends BaseDao<User> implements UserDao, AutoCloseable {
 
-    final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UserDaoImpl.class);
+    final  private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UserDaoImpl.class);
 
     private static final UserDaoImpl INSTANCE = new UserDaoImpl();
     private final Neo4jConnectionManager connectionManager;

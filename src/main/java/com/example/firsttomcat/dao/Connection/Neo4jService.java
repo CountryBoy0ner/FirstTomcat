@@ -8,7 +8,7 @@ import org.neo4j.driver.Record;
 
 
 public class Neo4jService {
-    final org.apache.log4j.Logger logger = Logger.getLogger(Neo4jService.class);
+    final  private org.apache.log4j.Logger logger = Logger.getLogger(Neo4jService.class);
 
 
     private final Driver driver;
