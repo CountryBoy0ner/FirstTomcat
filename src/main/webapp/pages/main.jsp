@@ -11,21 +11,6 @@
     <title>Main </title>
 </head>
 <body>
-Hello (forward)= ${user}
-<hr/>
-Hi (redirect/forward)= ${user_name}
-<hr/>
-
-<form action ="controller">
-    <input type="hidden" name="command" value = "logout" >
-    <input type="submit" value="logout" >
-</form>
-
-<ul>
-    <li>
-        <a href="http://localhost:8081/FirstTomcat_war_exploded/">Go back </a>
-    </li>
-</ul>
-
+Hello = ${user}
 </body>
 </html>

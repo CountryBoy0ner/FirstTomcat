@@ -1,10 +1,9 @@
 package com.example.firsttomcat.dao;
 
-import com.example.firsttomcat.exception.DaoException;
+import java.sql.SQLException;
 
 public interface UserDao {
-    boolean authenticate(String login, String password) throws DaoException;
-
-
+    boolean authenticate(String login, String password) throws SQLException, ClassNotFoundException;
+//    boolean register(String login, String password);
 
 }

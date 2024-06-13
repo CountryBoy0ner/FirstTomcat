@@ -6,22 +6,20 @@ import com.example.firsttomcat.command.impl.LoginCommand;
 import com.example.firsttomcat.command.impl.LogoutCommand;
 
 public enum CommandType {
-    ADD_USER(new AddUserCommand()),
-    LOGIN(new LoginCommand()),
+     ADD_USER(new AddUserCommand()),
+     LOGIN (new LoginCommand()),
     LOGOUT(new LogoutCommand()),
-    DEFAULT (new DefaultCommand());
-    Command command;
+     DEFAULT(new DefaultCommand());
+     Command command;
 
     CommandType(Command command) {
         this.command = command;
     }
-
     public Command getCommand() {
         return command;
     }
-
-    public static Command define(String commandStr){
+    public static Command defineCommand(String commandStr) {
         CommandType current = CommandType.valueOf(commandStr.toUpperCase());
-        return current.command;// todo 49.50, should have try/catch
+        return current.command;
     }
 }

@@ -1,5 +1,5 @@
 package com.example.firsttomcat.service;
 
-public interface CommandService {
-
+public class CommomService {
+    //todo
 }
